@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -e
+
+# This script publishes the gem to RubyGems without requiring Git operations
+
+# Build the gem if needed
+if [ ! -f "pkg/tiktok_business_api-$(ruby -r ./lib/tiktok_business_api/version -e 'print TiktokBusinessApi::VERSION').gem" ]; then
+  echo "Building gem..."
+  bundle exec rake build
+fi
+
+# Get the current version
+CURRENT_VERSION=$(ruby -r ./lib/tiktok_business_api/version -e 'print TiktokBusinessApi::VERSION')
+echo "Publishing tiktok_business_api version $CURRENT_VERSION to RubyGems..."
+
+# Prompt for RubyGems credentials if needed
+if [ -z "$RUBYGEMS_API_KEY" ]; then
+  if [ ! -f ~/.gem/credentials ]; then
+    echo "RubyGems credentials not found. You need to log in to RubyGems."
+    gem push --help
+    read -p "Press Enter after you've set up your credentials..." _
+  fi
+fi
+
+# Push to RubyGems
+echo "Pushing gem to RubyGems..."
+gem push "pkg/tiktok_business_api-$CURRENT_VERSION.gem"
+
+echo "Gem successfully published!"

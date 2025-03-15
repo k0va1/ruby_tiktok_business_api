@@ -16,5 +16,8 @@ RUN bundle install
 # Copy the rest of the application
 COPY . /gem/
 
+# Make sure scripts are executable
+RUN mkdir -p /gem/bin && chmod +x /gem/bin/* || true
+
 # Set default command
 CMD ["bundle", "exec", "rake", "--tasks"]

@@ -39,6 +39,10 @@ console: install
 publish: build
 	docker-compose run --rm gem bundle exec rake release
 
++# Publish the gem to RubyGems only (without Git operations)
++publish_gem: build
++       docker-compose run --rm gem bash -c "chmod +x bin/publish_gem && bin/publish_gem"
+
 # Prepare a new release (bump version and tag)
 release:
 	@read -p "Enter new version (current: $$(docker-compose run --rm gem ruby -r ./lib/tiktok_business_api/version -e 'puts TiktokBusinessApi::VERSION')): " version; \
