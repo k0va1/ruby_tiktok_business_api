@@ -13,7 +13,7 @@ module TiktokBusinessApi
     #
     # @param options [Hash] Override configuration options
     def initialize(options = {})
-      @config = TiktokBusinessApi.config.dup
+      @config = TiktokBusinessApi.config.dup || Config.new
       
       # Override config with options
       options.each do |key, value|

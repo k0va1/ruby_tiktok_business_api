@@ -3,15 +3,15 @@ require_relative 'lib/tiktok_business_api/version'
 Gem::Specification.new do |spec|
   spec.name          = "tiktok_business_api"
   spec.version       = TiktokBusinessApi::VERSION
-  spec.authors       = ["Your Name"]
-  spec.email         = ["your.email@example.com"]
-  spec.summary       = "Ruby client for the TikTok Business API"
-  spec.description   = "A Ruby interface to the TikTok Business API with support for campaigns, ad groups, ads, and more"
-  spec.homepage      = "https://github.com/yourusername/tiktok_business_api"
+  spec.authors       = ["Vlad Zloteanu"]
+  spec.email         = ["vlad.zloteanu@gmail.com"]
+  spec.summary       = "Ruby client for the TikTok Business API / Tiktok Ads API"
+  spec.description   = "A Ruby interface to the TikTok Business API (Tiktok Ads API) with support for campaigns, ad groups, ads, and more"
+  spec.homepage      = "https://github.com/vladzloteanu/tiktok_business_api"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
 
-  spec.files         = Dir.glob("{bin,lib}/**/*") + %w[LICENSE.txt README.md]
+  spec.files         = Dir.glob("{lib}/**/*") + %w[LICENSE.txt README.md]
   spec.require_paths = ["lib"]
 
   spec.add_dependency "faraday", "~> 2.0"

@@ -41,7 +41,7 @@ module TiktokBusinessApi
       # @param params [Hash] Query parameters
       # @param headers [Hash] Custom headers
       # @return [Hash] Response data
-      def get(path, params = {}, headers = {})
+      def _http_get(path, params = {}, headers = {})
         full_path = File.join(base_path, path)
         client.request(:get, full_path, params, headers)
       end
@@ -52,7 +52,7 @@ module TiktokBusinessApi
       # @param params [Hash] Body parameters
       # @param headers [Hash] Custom headers
       # @return [Hash] Response data
-      def post(path, params = {}, headers = {})
+      def _http_post(path, params = {}, headers = {})
         full_path = File.join(base_path, path)
         client.request(:post, full_path, params, headers)
       end
