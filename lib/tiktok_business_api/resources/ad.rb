@@ -4,21 +4,10 @@ module TiktokBusinessApi
   module Resources
     # Ad resource for the TikTok Business API
     class Ad < CrudResource
-      # Get the resource name (used for endpoint paths and parameter names)
-      #
-      # @return [String] Resource name
-      def resource_name
-        'ad'
-      end
+      RESOURCE_NAME = 'ad'
 
-      # Override ID parameter name to match the API expectations
-      def id_param_name
-        'ad_id'
-      end
-
-      # Override IDs parameter name to match the API expectations
-      def ids_param_name
-        'ad_ids'
+      def get(advertiser_id:, ad_id:)
+        list(advertiser_id: advertiser_id, filtering: {ad_ids: [ad_id]}).first
       end
 
       # Create a new ad
@@ -51,22 +40,6 @@ module TiktokBusinessApi
       def list(advertiser_id:, campaign_id: nil, filtering: {}, page_size: nil, page: nil, **other_params, &block)
         filtering[:campaign_ids] = [campaign_id] if campaign_id
         super(filtering: filtering, page_size: page_size, page: page, **other_params.merge(advertiser_id: advertiser_id), &block)
-      end
-
-      # Get an ad by ID
-      #
-      # @param advertiser_id [String] Advertiser ID
-      # @param ad_id [String] Ad ID
-      # @return [Hash] Ad data
-      def get(advertiser_id, ad_id)
-        params = {
-          advertiser_id: advertiser_id,
-          ad_ids: [ad_id]
-        }
-
-        response = _http_get(list_path, params)
-        ads = response.dig('data', 'list') || []
-        ads.first
       end
 
       # Update an ad

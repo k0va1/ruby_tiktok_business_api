@@ -4,21 +4,10 @@ module TiktokBusinessApi
   module Resources
     # AdGroup resource for the TikTok Business API
     class Adgroup < CrudResource
-      # Get the resource name (used for endpoint paths and parameter names)
-      #
-      # @return [String] Resource name
-      def resource_name
-        'adgroup'
-      end
+      RESOURCE_NAME = 'adgroup'
 
-      # Override ID parameter name to match the API expectations
-      def id_param_name
-        'adgroup_id'
-      end
-
-      # Override IDs parameter name to match the API expectations
-      def ids_param_name
-        'adgroup_ids'
+      def get(advertiser_id:, adgroup_id:)
+        list(advertiser_id: advertiser_id, filtering: {adgroup_ids: [adgroup_id]}).first
       end
 
       # Create a new ad group
@@ -37,22 +26,6 @@ module TiktokBusinessApi
       def list(advertiser_id:, campaign_id: nil, filtering: {}, page_size: nil, page: nil, **other_params, &block)
         filtering[:campaign_ids] = [campaign_id] if campaign_id
         super(filtering: filtering, page_size: page_size, page: page, **other_params.merge(advertiser_id: advertiser_id), &block)
-      end
-
-      # Get an ad group by ID
-      #
-      # @param advertiser_id [String] Advertiser ID
-      # @param adgroup_id [String] Ad group ID
-      # @return [Hash] Ad group data
-      def get(advertiser_id, adgroup_id)
-        params = {
-          advertiser_id: advertiser_id,
-          adgroup_ids: [adgroup_id]
-        }
-
-        response = _http_get(list_path, params)
-        adgroups = response.dig('data', 'list') || []
-        adgroups.first
       end
 
       # Update an ad group

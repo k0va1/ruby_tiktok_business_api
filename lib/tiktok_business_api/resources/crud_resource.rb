@@ -29,6 +29,10 @@ module TiktokBusinessApi
         'status/update/'
       end
 
+      def resource_name
+        self::class::RESOURCE_NAME
+      end
+
       # Default ID parameter name
       def id_param_name
         "#{resource_name}_id"
