@@ -7,20 +7,24 @@ all: help
 setup:
 	docker-compose build
 
+# Install dependencies
+install:
+	docker-compose run --rm gem bundle install
+
 # Build the gem
-build:
+build: install
 	docker-compose run --rm gem bundle exec rake build
 
 # Run tests
-test:
+test: install
 	docker-compose run --rm test
 
 # Run linting (RuboCop)
-lint:
+lint: install
 	docker-compose run --rm gem bundle exec rubocop
 
 # Generate documentation
-docs:
+docs: install
 	docker-compose run --rm gem bundle exec yard
 
 # Open a shell in the Docker container
@@ -28,11 +32,11 @@ shell:
 	docker-compose run --rm gem bash
 
 # Open a console with the gem loaded
-console:
+console: install
 	docker-compose run --rm console
 
 # Publish the gem to RubyGems
-publish:
+publish: build
 	docker-compose run --rm gem bundle exec rake release
 
 # Prepare a new release (bump version and tag)
@@ -52,6 +56,7 @@ clean:
 help:
 	@echo "Available targets:"
 	@echo "  setup    - Set up the development environment"
+	@echo "  install  - Install dependencies"
 	@echo "  build    - Build the gem"
 	@echo "  test     - Run tests"
 	@echo "  lint     - Run RuboCop linting"

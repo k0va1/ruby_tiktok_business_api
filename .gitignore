@@ -12,3 +12,4 @@
 .ruby-gemset
 Gemfile.lock
 .env
+.idea
