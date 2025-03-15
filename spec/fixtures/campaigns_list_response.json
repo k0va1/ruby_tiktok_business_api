@@ -1,0 +1,33 @@
+{
+  "code": 0,
+  "message": "OK",
+  "request_id": "sample_request_id",
+  "data": {
+    "page_info": {
+      "total_number": 2,
+      "page": 1,
+      "page_size": 10,
+      "total_page": 1
+    },
+    "list": [
+      {
+        "campaign_id": "12345678990",
+        "campaign_name": "Test Campaign 1",
+        "advertiser_id": "6847511801231360006",
+        "budget_mode": "BUDGET_MODE_TOTAL",
+        "budget": 1000,
+        "operation_status": "ENABLE",
+        "objective_type": "TRAFFIC"
+      },
+      {
+        "campaign_id": "12345678991",
+        "campaign_name": "Test Campaign 2",
+        "advertiser_id": "6847511801231360006",
+        "budget_mode": "BUDGET_MODE_TOTAL",
+        "budget": 2000,
+        "operation_status": "DISABLE",
+        "objective_type": "APP_PROMOTION"
+      }
+    ]
+  }
+}

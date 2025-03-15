@@ -1,0 +1,7 @@
+{
+  "name": "tiktok-business-api",
+  "private": true,
+  "scripts": {
+    "test": "bundle exec rspec"
+  }
+}

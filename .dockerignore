@@ -1,0 +1,11 @@
+.git
+.github
+pkg/
+*.gem
+coverage/
+doc/
+.bundle/
+vendor/
+tmp/
+.yardoc/
+Gemfile.lock
