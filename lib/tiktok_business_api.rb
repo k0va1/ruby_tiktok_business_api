@@ -13,7 +13,10 @@ require_relative 'tiktok_business_api/auth'
 
 # Resources
 require_relative 'tiktok_business_api/resources/base_resource'
+require_relative 'tiktok_business_api/resources/crud_resource'
 require_relative 'tiktok_business_api/resources/campaign'
+require_relative 'tiktok_business_api/resources/adgroup'
+require_relative 'tiktok_business_api/resources/ad'
 
 module TiktokBusinessApi
   class << self

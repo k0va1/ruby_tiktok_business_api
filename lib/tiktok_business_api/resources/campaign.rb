@@ -3,97 +3,45 @@
 module TiktokBusinessApi
   module Resources
     # Campaign resource for the TikTok Business API
-    class Campaign < BaseResource
-      # Create a new campaign
+    class Campaign < CrudResource
+      # Get the resource name (used for endpoint paths and parameter names)
       #
-      # @param advertiser_id [String] Advertiser ID
-      # @param params [Hash] Campaign parameters
-      # @return [Hash] New campaign data
-      def create(advertiser_id, params = {})
-        # Ensure advertiser_id is included in the params
-        params = params.merge(advertiser_id: advertiser_id)
-
-        response = post('create/', params)
-        response['data']
+      # @return [String] Resource name
+      def resource_name
+        'campaign'
       end
 
-      # Get a list of campaigns
-      #
-      # @param advertiser_id [String] Advertiser ID
-      # @param params [Hash] Filter parameters
-      # @return [Hash] Campaign list response
-      def list(advertiser_id, params = {})
-        # Ensure advertiser_id is included in the params
-        params = params.merge(advertiser_id: advertiser_id)
+      # Override ID parameter name to match the API expectations
+      def id_param_name
+        'campaign_id'
+      end
 
-        response = _http_get('get/', params)
-        response['data']
+      # Override IDs parameter name to match the API expectations
+      def ids_param_name
+        'campaign_ids'
       end
 
       # Get a campaign by ID
+      # Custom implementation to maintain backward compatibility
       #
       # @param advertiser_id [String] Advertiser ID
       # @param campaign_id [String] Campaign ID
       # @return [Hash] Campaign data
-      def get(advertiser_id, campaign_id)
+      def get_campaign(advertiser_id, campaign_id)
         params = {
           advertiser_id: advertiser_id,
           campaign_ids: [campaign_id]
         }
 
-        response = _http_get('get/', params)
+        response = _http_get(list_path, params)
         campaigns = response.dig('data', 'list') || []
         campaigns.first
       end
 
-      # Update a campaign
-      #
-      # @param advertiser_id [String] Advertiser ID
-      # @param campaign_id [String] Campaign ID
-      # @param params [Hash] Campaign parameters to update
-      # @return [Hash] Updated campaign data
-      def update(advertiser_id, campaign_id, params = {})
-        # Ensure required parameters are included
-        params = params.merge(
-          advertiser_id: advertiser_id,
-          campaign_id: campaign_id
-        )
-
-        response = _http_post('update/', params)
-        response['data']
+      def list(advertiser_id:, filtering: {}, page_size: nil, page: nil, **other_params, &block)
+        super(filtering: filtering, page_size: page_size, page: page, **other_params.merge(advertiser_id: advertiser_id), &block)
       end
 
-      # Update campaign status (enable/disable)
-      #
-      # @param advertiser_id [String] Advertiser ID
-      # @param campaign_id [String] Campaign ID
-      # @param status [String] New status ('ENABLE' or 'DISABLE')
-      # @return [Hash] Result
-      def update_status(advertiser_id, campaign_id, status)
-        params = {
-          advertiser_id: advertiser_id,
-          campaign_ids: [campaign_id],
-          operation_status: status
-        }
-
-        response = post('status/update/', params)
-        response['data']
-      end
-
-      # Delete a campaign
-      #
-      # @param advertiser_id [String] Advertiser ID
-      # @param campaign_id [String] Campaign ID
-      # @return [Hash] Result
-      def delete(advertiser_id, campaign_id)
-        params = {
-          advertiser_id: advertiser_id,
-          campaign_ids: [campaign_id]
-        }
-
-        response = _http_post('delete/', params)
-        response['data']
-      end
     end
   end
 end

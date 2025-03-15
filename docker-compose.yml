@@ -48,5 +48,19 @@ services:
     tty: true
     stdin_open: true
 
+  local_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/gem
+      - bundle_cache:/usr/local/bundle
+    environment:
+      - BUNDLE_PATH=/usr/local/bundle
+      - BUNDLE_APP_CONFIG=/usr/local/bundle
+    command: bundle exec bin/local_dev.rb
+    tty: true
+    stdin_open: true
+
 volumes:
   bundle_cache:

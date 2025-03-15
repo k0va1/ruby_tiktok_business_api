@@ -13,3 +13,4 @@
 Gemfile.lock
 .env
 .idea
+/bin/local_dev.rb

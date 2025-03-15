@@ -35,6 +35,10 @@ shell:
 console: install
 	docker-compose run --rm console
 
+# Open a console with the gem loaded
+local_dev: install
+	docker-compose run --rm local_dev
+
 # Publish the gem to RubyGems
 publish: build
 	docker-compose run --rm gem bundle exec rake release
