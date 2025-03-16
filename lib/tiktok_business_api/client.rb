@@ -73,7 +73,14 @@ module TiktokBusinessApi
         when :get, :delete
           req.params = params
         when :post, :put
-          req.body = JSON.generate(params) unless params.empty?
+          if headers['Content-Type'] == 'multipart/form-data'
+            # For multipart form data, use Faraday's multipart support
+            params.each do |key, value|
+              req.body[key] = value
+            end
+          else
+            req.body = JSON.generate(params) unless params.empty?
+          end
         end
       end
 
@@ -102,6 +109,13 @@ module TiktokBusinessApi
       resource(:ad)
     end
 
+    # Access to image resource
+    #
+    # @return [TiktokBusinessApi::Resources::Image] Image resource
+    def images
+      resource(:image)
+    end
+
     private
 
     # Set up Faraday connection
@@ -116,6 +130,9 @@ module TiktokBusinessApi
         conn.use Faraday::Response::Logger, @config.logger if @config.logger
         conn.use Faraday::FollowRedirects::Middleware
         conn.use Faraday::Retry::Middleware, max: 3
+
+        # Use multipart middleware for file uploads
+        conn.request :multipart
 
         conn.adapter Faraday.default_adapter
       end

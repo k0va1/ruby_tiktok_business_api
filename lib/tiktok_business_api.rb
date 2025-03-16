@@ -3,6 +3,7 @@
 require 'faraday'
 require 'faraday/retry'
 require 'faraday/follow_redirects'
+require 'faraday/multipart'
 require 'json'
 
 require_relative 'tiktok_business_api/version'
@@ -17,6 +18,7 @@ require_relative 'tiktok_business_api/resources/crud_resource'
 require_relative 'tiktok_business_api/resources/campaign'
 require_relative 'tiktok_business_api/resources/adgroup'
 require_relative 'tiktok_business_api/resources/ad'
+require_relative 'tiktok_business_api/resources/image'
 
 module TiktokBusinessApi
   class << self
