@@ -18,11 +18,11 @@ module TiktokBusinessApi
       # @option options [String] :upload_type Upload type ('UPLOAD_BY_FILE', 'UPLOAD_BY_URL', 'UPLOAD_BY_FILE_ID')
       # @option options [String] :file_name Image file name
       # @option options [File] :image_file Image file (required when upload_type is 'UPLOAD_BY_FILE')
-      # @option options [String] :image_signature MD5 of image file (required when upload_type is 'UPLOAD_BY_FILE')
+      # @option options [String] :image_signature MD5 of image file (optional when upload_type is 'UPLOAD_BY_FILE', will be calculated if not provided)
       # @option options [String] :image_url Image URL (required when upload_type is 'UPLOAD_BY_URL')
       # @option options [String] :file_id File ID (required when upload_type is 'UPLOAD_BY_FILE_ID')
       # @return [Hash] Upload result with image ID
-      def upload(advertiser_id, options = {})
+      def upload(advertiser_id:, **options)
         upload_type = options[:upload_type] || 'UPLOAD_BY_FILE'
 
         params = {
@@ -36,9 +36,17 @@ module TiktokBusinessApi
         case upload_type
         when 'UPLOAD_BY_FILE'
           raise ArgumentError, 'image_file is required for UPLOAD_BY_FILE' unless options[:image_file]
-          raise ArgumentError, 'image_signature is required for UPLOAD_BY_FILE' unless options[:image_signature]
 
-          params[:image_file] = options[:image_file]
+          # Auto-calculate image signature if not provided
+          if !options[:image_signature]
+            options[:image_signature] = TiktokBusinessApi::Utils.calculate_md5(options[:image_file])
+          end
+
+          # Create a FilePart for multipart file upload
+          params[:image_file] = Faraday::Multipart::FilePart.new(
+            options[:image_file],
+            TiktokBusinessApi::Utils.detect_content_type(options[:image_file])
+          )
           params[:image_signature] = options[:image_signature]
 
           # For file uploads, we need to use multipart/form-data

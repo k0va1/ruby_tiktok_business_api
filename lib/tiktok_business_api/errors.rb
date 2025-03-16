@@ -50,12 +50,20 @@ module TiktokBusinessApi
     # @return [TiktokBusinessApi::Error] The appropriate error object
     def self.from_response(response, request = nil)
       status = response.status
-      body = response.body
+      body = if response.body && !response.body.empty?
+        begin
+          JSON.parse(response.body)
+        rescue JSON::ParserError
+          { error: "Invalid JSON response: #{response.body}" }
+        end
+      else
+        {}
+      end
       
       # Parse TikTok API response which has its own error structure
       error_code = body.is_a?(Hash) ? body['code'] : nil
       error_message = body.is_a?(Hash) ? body['message'] : nil
-      
+
       # Determine the error class based on status and error code
       klass = case status
       when 401

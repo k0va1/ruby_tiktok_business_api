@@ -74,9 +74,11 @@ module TiktokBusinessApi
           req.params = params
         when :post, :put
           if headers['Content-Type'] == 'multipart/form-data'
-            # For multipart form data, use Faraday's multipart support
+            # For multipart form data, let Faraday handle it
+            req.options.timeout = 120 # Extend timeout for file uploads
+            req.body = {}  # Initialize the body as an empty hash
             params.each do |key, value|
-              req.body[key] = value
+              req.body[key.to_sym] = value
             end
           else
             req.body = JSON.generate(params) unless params.empty?

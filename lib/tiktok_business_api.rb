@@ -9,6 +9,7 @@ require 'json'
 require_relative 'tiktok_business_api/version'
 require_relative 'tiktok_business_api/config'
 require_relative 'tiktok_business_api/errors'
+require_relative 'tiktok_business_api/utils'
 require_relative 'tiktok_business_api/client'
 require_relative 'tiktok_business_api/auth'
 
