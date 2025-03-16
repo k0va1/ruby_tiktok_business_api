@@ -113,6 +113,56 @@ client.campaigns.list_all(advertiser_id) do |campaign|
 end
 ```
 
+### Working with Identities
+
+The Identity feature allows you to create Spark Ads by working with authorized TikTok accounts.
+
+```ruby
+# List available identities
+identities = client.identities.list(advertiser_id: 'your_advertiser_id')
+
+# Get information about a specific identity
+identity_info = client.identities.get_info(
+  advertiser_id: 'your_advertiser_id',
+  identity_id: 'identity_id',
+  identity_type: 'TT_USER'
+)
+
+# Create a custom user identity
+new_identity = client.identities.create(
+  advertiser_id: 'your_advertiser_id',
+  display_name: 'My Custom Identity',
+  image_uri: 'image_id_from_uploaded_image' # Optional
+)
+
+# List all identities with pagination
+client.identities.list_all(advertiser_id: 'your_advertiser_id') do |identity|
+  puts "Identity: #{identity['display_name']} (#{identity['identity_type']})"
+end
+```
+
+### Working with Images
+
+Upload and manage images for your ads:
+
+```ruby
+# Upload an image file
+uploaded_image = client.images.upload(
+  advertiser_id: 'your_advertiser_id',
+  image_file: File.open('/path/to/image.jpg')
+)
+
+# Get image info
+image_info = client.images.get_info('your_advertiser_id', uploaded_image['image_id'])
+
+# Search for images
+images = client.images.search(
+  advertiser_id: 'your_advertiser_id',
+  page: 1,
+  page_size: 20
+)
+```
+
 ## Logging Requests and Responses
 
 You can enable debug logging to see all API requests and responses:

@@ -118,6 +118,13 @@ module TiktokBusinessApi
       resource(:image)
     end
 
+    # Access to identity resource
+    #
+    # @return [TiktokBusinessApi::Resources::Identity] Identity resource
+    def identities
+      resource(:identity)
+    end
+
     private
 
     # Set up Faraday connection
