@@ -125,6 +125,13 @@ module TiktokBusinessApi
       resource(:identity)
     end
 
+    # Access to account resource
+    #
+    # @return [TiktokBusinessApi::Resources::Account] Account resource
+    def accounts
+      resource(:account)
+    end
+
     private
 
     # Set up Faraday connection
