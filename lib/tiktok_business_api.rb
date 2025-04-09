@@ -21,6 +21,7 @@ require_relative 'tiktok_business_api/resources/adgroup'
 require_relative 'tiktok_business_api/resources/ad'
 require_relative 'tiktok_business_api/resources/image'
 require_relative 'tiktok_business_api/resources/identity'
+require_relative 'tiktok_business_api/resources/account'
 
 module TiktokBusinessApi
   class << self
