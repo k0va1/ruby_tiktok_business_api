@@ -8,7 +8,7 @@ module TiktokBusinessApi
       #
       # @return [String] Resource name
       def resource_name
-        'file/image/ad'
+        "file/image/ad"
       end
 
       # Upload an image
@@ -23,7 +23,7 @@ module TiktokBusinessApi
       # @option options [String] :file_id File ID (required when upload_type is 'UPLOAD_BY_FILE_ID')
       # @return [Hash] Upload result with image ID
       def upload(advertiser_id:, **options)
-        upload_type = options[:upload_type] || 'UPLOAD_BY_FILE'
+        upload_type = options[:upload_type] || "UPLOAD_BY_FILE"
 
         params = {
           advertiser_id: advertiser_id,
@@ -34,11 +34,11 @@ module TiktokBusinessApi
         params[:file_name] = options[:file_name] if options[:file_name]
 
         case upload_type
-        when 'UPLOAD_BY_FILE'
-          raise ArgumentError, 'image_file is required for UPLOAD_BY_FILE' unless options[:image_file]
+        when "UPLOAD_BY_FILE"
+          raise ArgumentError, "image_file is required for UPLOAD_BY_FILE" unless options[:image_file]
 
           # Auto-calculate image signature if not provided
-          if !options[:image_signature]
+          unless options[:image_signature]
             options[:image_signature] = TiktokBusinessApi::Utils.calculate_md5(options[:image_file])
           end
 
@@ -50,15 +50,15 @@ module TiktokBusinessApi
           params[:image_signature] = options[:image_signature]
 
           # For file uploads, we need to use multipart/form-data
-          headers = { 'Content-Type' => 'multipart/form-data' }
+          headers = {"Content-Type" => "multipart/form-data"}
           response = client.request(:post, "#{base_path}/upload/", params, headers)
-        when 'UPLOAD_BY_URL'
-          raise ArgumentError, 'image_url is required for UPLOAD_BY_URL' unless options[:image_url]
+        when "UPLOAD_BY_URL"
+          raise ArgumentError, "image_url is required for UPLOAD_BY_URL" unless options[:image_url]
 
           params[:image_url] = options[:image_url]
           response = client.request(:post, "#{base_path}/upload/", params)
-        when 'UPLOAD_BY_FILE_ID'
-          raise ArgumentError, 'file_id is required for UPLOAD_BY_FILE_ID' unless options[:file_id]
+        when "UPLOAD_BY_FILE_ID"
+          raise ArgumentError, "file_id is required for UPLOAD_BY_FILE_ID" unless options[:file_id]
 
           params[:file_id] = options[:file_id]
           response = client.request(:post, "#{base_path}/upload/", params)
@@ -66,7 +66,7 @@ module TiktokBusinessApi
           raise ArgumentError, "Invalid upload_type: #{upload_type}"
         end
 
-        response['data']
+        response["data"]
       end
 
       # Get image info by image ID
@@ -81,7 +81,7 @@ module TiktokBusinessApi
         }
 
         response = client.request(:get, "#{base_path}/info/", params)
-        images = response.dig('data', 'list') || []
+        images = response.dig("data", "list") || []
         images.first
       end
 
@@ -102,7 +102,7 @@ module TiktokBusinessApi
       # @yield [image] Block to process each image
       # @yieldparam image [Hash] Image data from the response
       # @return [Hash, Array] Image list response or processed images
-      def search(advertiser_id:, **options)
+      def search(advertiser_id:, **options, &block)
         # Set up default values
         page = options[:page] || 1
         page_size = options[:page_size] || 20
@@ -114,19 +114,19 @@ module TiktokBusinessApi
         }
 
         # Add optional parameters if provided
-        search_fields = [:image_ids, :material_ids, :width, :height, :signature,
-                         :start_time, :end_time, :displayable]
+        search_fields = %i[image_ids material_ids width height signature
+          start_time end_time displayable]
 
         search_fields.each do |field|
           params[field] = options[field] if options.key?(field)
         end
 
         response = client.request(:get, "#{base_path}/search/", params)
-        image_list = response.dig('data', 'list') || []
+        image_list = response.dig("data", "list") || []
 
         if block_given?
-          image_list.each { |image| yield(image) }
-          response['data']
+          image_list.each(&block)
+          response["data"]
         else
           image_list
         end
@@ -143,8 +143,8 @@ module TiktokBusinessApi
           file_names: file_names
         }
 
-        response = client.request(:post, 'file/name/check/', params)
-        response['data']
+        response = client.request(:post, "file/name/check/", params)
+        response["data"]
       end
     end
   end

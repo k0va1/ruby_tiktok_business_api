@@ -4,7 +4,7 @@ module TiktokBusinessApi
   module Resources
     # Identity resource for the TikTok Business API
     class Identity < BaseResource
-      RESOURCE_NAME = 'identity'
+      RESOURCE_NAME = "identity"
 
       # Get a list of identities
       #
@@ -16,7 +16,7 @@ module TiktokBusinessApi
       # @option options [Integer] :page Page number
       # @option options [Integer] :page_size Number of results per page
       # @return [Hash] Response with list of identities and pagination info
-      def list(advertiser_id:, **options)
+      def list(advertiser_id:, **options, &block)
         params = {
           advertiser_id: advertiser_id
         }
@@ -30,12 +30,11 @@ module TiktokBusinessApi
 
         response = client.request(:get, "#{base_path}get/", params)
 
-        if block_given? && response['data']['identity_list']
-          response['data']['identity_list'].each { |identity| yield(identity) }
-          response['data']
-        else
-          response['data']
+        if block_given? && response["data"]["identity_list"]
+          response["data"]["identity_list"].each(&block)
         end
+
+        response["data"]
       end
 
       # Get information about a specific identity
@@ -56,7 +55,7 @@ module TiktokBusinessApi
         params[:identity_authorized_bc_id] = identity_authorized_bc_id if identity_authorized_bc_id
 
         response = client.request(:get, "#{base_path}info/", params)
-        response['data']['identity_info']
+        response["data"]["identity_info"]
       end
 
       # Create a new Custom User identity
@@ -75,7 +74,7 @@ module TiktokBusinessApi
         params[:image_uri] = image_uri if image_uri
 
         response = client.request(:post, "#{base_path}create/", params)
-        response['data']
+        response["data"]
       end
 
       # List all identities with automatic pagination
@@ -95,18 +94,18 @@ module TiktokBusinessApi
           current_options = options.merge(page: page, page_size: page_size)
           response = list(advertiser_id: advertiser_id, **current_options)
 
-          identities = response['identity_list'] || []
+          identities = response["identity_list"] || []
 
           if block_given?
-            identities.each { |identity| yield(identity) }
+            identities.each(&block)
           else
             all_identities.concat(identities)
           end
 
           # Check pagination info
-          page_info = response['page_info'] || {}
-          current_page = page_info['page'].to_i
-          total_pages = page_info['total_page'].to_i
+          page_info = response["page_info"] || {}
+          current_page = page_info["page"].to_i
+          total_pages = page_info["total_page"].to_i
 
           has_more = current_page < total_pages
           page += 1

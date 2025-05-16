@@ -6,31 +6,31 @@ module TiktokBusinessApi
     class CrudResource < BaseResource
       # Default path for create operations
       def create_path
-        'create/'
+        "create/"
       end
 
       # Default path for read/list operations
       def list_path
-        'get/'
+        "get/"
       end
 
       # Default path for update operations
       def update_path
-        'update/'
+        "update/"
       end
 
       # Default path for delete operations
       def delete_path
-        'delete/'
+        "delete/"
       end
 
       # Default path for status updates
       def status_update_path
-        'status/update/'
+        "status/update/"
       end
 
       def resource_name
-        self::class::RESOURCE_NAME
+        self.class::RESOURCE_NAME
       end
 
       # Default ID parameter name
@@ -49,13 +49,13 @@ module TiktokBusinessApi
       # @param params [Hash] Resource parameters
       # @param owner_param_name [String] Parameter name for the owner ID
       # @return [Hash] New resource data
-      def create(owner_id, params = {}, owner_param_name = 'advertiser_id')
+      def create(owner_id, params = {}, owner_param_name = "advertiser_id")
         params = params.merge(owner_param_name => owner_id)
         response = _http_post(create_path, params)
-        response['data']
+        response["data"]
       end
 
-      def list(filtering: {}, page_size: nil, page: nil, **other_params)
+      def list(filtering: {}, page_size: nil, page: nil, **other_params, &block)
         # Build request paramss
         request_params = other_params.merge(filtering: filtering.to_json)
 
@@ -69,14 +69,14 @@ module TiktokBusinessApi
 
         # If a block is given, yield each item
         if block_given?
-          items = response.dig('data', 'list') || []
-          items.each { |item| yield(item) }
+          items = response.dig("data", "list") || []
+          items.each(&block)
 
           # Return the response for method chaining
           response
         else
           # Just return the data otherwise
-          response['data']['list']
+          response["data"]["list"]
         end
       end
 
@@ -89,7 +89,7 @@ module TiktokBusinessApi
       # @yield [resource] Block to process each resource
       # @yieldparam resource [Hash] Resource from the response
       # @return [Array] All resources if no block is given
-      def list_all(owner_id, params = {}, owner_param_name = 'advertiser_id', list_key = 'list')
+      def list_all(owner_id, params = {}, owner_param_name = "advertiser_id", list_key = "list", &block)
         items = []
         page = 1
         page_size = params[:page_size] || 10
@@ -105,20 +105,20 @@ module TiktokBusinessApi
           response = _http_get(list_path, request_params)
 
           # Extract data from the response
-          current_items = response.dig('data', list_key) || []
+          current_items = response.dig("data", list_key) || []
 
           if block_given?
-            current_items.each { |item| yield(item) }
+            current_items.each(&block)
           else
             items.concat(current_items)
           end
 
           # Check if there are more pages
-          page_info = response.dig('data', 'page_info') || {}
-          total_number = page_info['total_number'] || 0
+          page_info = response.dig("data", "page_info") || {}
+          total_number = page_info["total_number"] || 0
           total_fetched = page * page_size
 
-          has_more = page_info['has_more'] == true ||
+          has_more = page_info["has_more"] == true ||
             (total_number > 0 && total_fetched < total_number)
           page += 1
 
@@ -135,14 +135,14 @@ module TiktokBusinessApi
       # @param resource_id [String] Resource ID
       # @param owner_param_name [String] Parameter name for the owner ID
       # @return [Hash] Resource data
-      def get(owner_id, resource_id, owner_param_name = 'advertiser_id')
+      def get(owner_id, resource_id, owner_param_name = "advertiser_id")
         params = {
           owner_param_name => owner_id,
           ids_param_name => [resource_id]
         }
 
         response = _http_get(list_path, params)
-        items = response.dig('data', 'list') || []
+        items = response.dig("data", "list") || []
         items.first
       end
 
@@ -153,7 +153,7 @@ module TiktokBusinessApi
       # @param params [Hash] Resource parameters to update
       # @param owner_param_name [String] Parameter name for the owner ID
       # @return [Hash] Updated resource data
-      def update(owner_id, resource_id, params = {}, owner_param_name = 'advertiser_id')
+      def update(owner_id, resource_id, params = {}, owner_param_name = "advertiser_id")
         # Ensure required parameters are included
         params = params.merge(
           owner_param_name => owner_id,
@@ -161,7 +161,7 @@ module TiktokBusinessApi
         )
 
         response = _http_post(update_path, params)
-        response['data']
+        response["data"]
       end
 
       # Update resource status
@@ -171,15 +171,15 @@ module TiktokBusinessApi
       # @param status [String] New status
       # @param owner_param_name [String] Parameter name for the owner ID
       # @return [Hash] Result
-      def update_status(owner_id, resource_id, status, owner_param_name = 'advertiser_id')
+      def update_status(owner_id, resource_id, status, owner_param_name = "advertiser_id")
         params = {
           owner_param_name => owner_id,
           ids_param_name => [resource_id],
-          'operation_status' => status
+          "operation_status" => status
         }
 
         response = _http_post(status_update_path, params)
-        response['data']
+        response["data"]
       end
 
       # Delete a resource
@@ -188,14 +188,14 @@ module TiktokBusinessApi
       # @param resource_id [String] Resource ID
       # @param owner_param_name [String] Parameter name for the owner ID
       # @return [Hash] Result
-      def delete(owner_id, resource_id, owner_param_name = 'advertiser_id')
+      def delete(owner_id, resource_id, owner_param_name = "advertiser_id")
         params = {
           owner_param_name => owner_id,
           ids_param_name => [resource_id]
         }
 
         response = _http_post(delete_path, params)
-        response['data']
+        response["data"]
       end
     end
   end

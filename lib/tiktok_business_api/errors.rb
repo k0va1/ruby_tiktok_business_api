@@ -5,13 +5,13 @@ module TiktokBusinessApi
   class Error < StandardError
     # @return [Integer] HTTP status code
     attr_reader :status_code
-    
+
     # @return [Hash] Full response body
     attr_reader :body
-    
+
     # @return [Hash] Request that caused the error
     attr_reader :request
-    
+
     # Initialize a new error
     #
     # @param message [String] Error message
@@ -25,19 +25,19 @@ module TiktokBusinessApi
       super(message)
     end
   end
-  
+
   # Error raised when authentication fails
   class AuthenticationError < Error; end
-  
+
   # Error raised when authorization fails
   class AuthorizationError < Error; end
-  
+
   # Error raised for invalid requests
   class InvalidRequestError < Error; end
-  
+
   # Error raised for API errors
   class ApiError < Error; end
-  
+
   # Error raised for rate limit errors
   class RateLimitError < Error; end
 
@@ -54,15 +54,15 @@ module TiktokBusinessApi
         begin
           JSON.parse(response.body)
         rescue JSON::ParserError
-          { error: "Invalid JSON response: #{response.body}" }
+          {error: "Invalid JSON response: #{response.body}"}
         end
       else
         {}
       end
-      
+
       # Parse TikTok API response which has its own error structure
-      error_code = body.is_a?(Hash) ? body['code'] : nil
-      error_message = body.is_a?(Hash) ? body['message'] : nil
+      body.is_a?(Hash) ? body["code"] : nil
+      error_message = body.is_a?(Hash) ? body["message"] : nil
 
       # Determine the error class based on status and error code
       klass = case status
@@ -79,7 +79,7 @@ module TiktokBusinessApi
       else
         Error
       end
-      
+
       # Create and return the error
       klass.new(
         error_message || "HTTP #{status}",

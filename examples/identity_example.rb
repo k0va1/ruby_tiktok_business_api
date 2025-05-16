@@ -1,32 +1,33 @@
 # frozen_string_literal: true
+
 # Example of working with identities in the TikTok Business API
 
-require 'tiktok_business_api'
-require 'logger'
+require "tiktok_business_api"
+require "logger"
 
 # Configure the client
 TiktokBusinessApi.configure do |config|
-  config.app_id = 'YOUR_APP_ID'
-  config.secret = 'YOUR_APP_SECRET'
-  config.access_token = 'YOUR_ACCESS_TOKEN'
+  config.app_id = "YOUR_APP_ID"
+  config.secret = "YOUR_APP_SECRET"
+  config.access_token = "YOUR_ACCESS_TOKEN"
   config.debug = true
-  config.logger = Logger.new(STDOUT)
+  config.logger = Logger.new($stdout)
 end
 
 # Initialize a client
 client = TiktokBusinessApi.client
 
 # Advertiser ID to work with
-advertiser_id = 'YOUR_ADVERTISER_ID'
+advertiser_id = "YOUR_ADVERTISER_ID"
 
 # Example 1: List all identities
 puts "Listing all identities for advertiser #{advertiser_id}:"
 begin
   identities = client.identities.list(advertiser_id: advertiser_id)
 
-  puts "Found #{identities['identity_list'].size} identities:"
-  identities['identity_list'].each do |identity|
-    puts "- #{identity['display_name']} (ID: #{identity['identity_id']}, Type: #{identity['identity_type']})"
+  puts "Found #{identities["identity_list"].size} identities:"
+  identities["identity_list"].each do |identity|
+    puts "- #{identity["display_name"]} (ID: #{identity["identity_id"]}, Type: #{identity["identity_type"]})"
   end
 rescue TiktokBusinessApi::Error => e
   puts "Error listing identities: #{e.message}"
@@ -40,10 +41,10 @@ begin
   # First, upload an image to use as avatar (optional)
   image_response = client.images.upload(
     advertiser_id: advertiser_id,
-    image_file: File.open('path/to/avatar.jpg') # Replace with actual path
+    image_file: File.open("path/to/avatar.jpg") # Replace with actual path
   )
 
-  image_id = image_response['image_id']
+  image_id = image_response["image_id"]
   puts "Uploaded avatar image with ID: #{image_id}"
 
   # Create the identity
@@ -53,9 +54,8 @@ begin
     image_uri: image_id
   )
 
-  identity_id = new_identity['identity_id']
+  identity_id = new_identity["identity_id"]
   puts "Created new identity with ID: #{identity_id}"
-
 rescue TiktokBusinessApi::Error => e
   puts "Error creating identity: #{e.message}"
   puts "Status code: #{e.status_code}"
@@ -69,15 +69,14 @@ if defined?(identity_id)
     identity_info = client.identities.get_info(
       advertiser_id: advertiser_id,
       identity_id: identity_id,
-      identity_type: 'CUSTOMIZED_USER'
+      identity_type: "CUSTOMIZED_USER"
     )
 
     puts "Identity details:"
-    puts "- Display name: #{identity_info['display_name']}"
-    puts "- ID: #{identity_info['identity_id']}"
-    puts "- Type: #{identity_info['identity_type']}"
-    puts "- Profile image: #{identity_info['profile_image_url']}"
-
+    puts "- Display name: #{identity_info["display_name"]}"
+    puts "- ID: #{identity_info["identity_id"]}"
+    puts "- Type: #{identity_info["identity_type"]}"
+    puts "- Profile image: #{identity_info["profile_image_url"]}"
   rescue TiktokBusinessApi::Error => e
     puts "Error getting identity info: #{e.message}"
     puts "Status code: #{e.status_code}"
@@ -89,7 +88,7 @@ end
 puts "\nListing all identities with pagination (using list_all method):"
 begin
   client.identities.list_all(advertiser_id: advertiser_id) do |identity|
-    puts "- #{identity['display_name']} (ID: #{identity['identity_id']}, Type: #{identity['identity_type']})"
+    puts "- #{identity["display_name"]} (ID: #{identity["identity_id"]}, Type: #{identity["identity_type"]})"
   end
 rescue TiktokBusinessApi::Error => e
   puts "Error listing all identities: #{e.message}"
@@ -100,13 +99,13 @@ puts "\nListing Custom User identities with filtering:"
 begin
   filtered_identities = client.identities.list(
     advertiser_id: advertiser_id,
-    identity_type: 'CUSTOMIZED_USER',
-    filtering: { keyword: 'Test' }  # Filter by display name containing "Test"
+    identity_type: "CUSTOMIZED_USER",
+    filtering: {keyword: "Test"} # Filter by display name containing "Test"
   )
 
-  puts "Found #{filtered_identities['identity_list'].size} matching identities:"
-  filtered_identities['identity_list'].each do |identity|
-    puts "- #{identity['display_name']} (ID: #{identity['identity_id']})"
+  puts "Found #{filtered_identities["identity_list"].size} matching identities:"
+  filtered_identities["identity_list"].each do |identity|
+    puts "- #{identity["display_name"]} (ID: #{identity["identity_id"]})"
   end
 rescue TiktokBusinessApi::Error => e
   puts "Error listing filtered identities: #{e.message}"

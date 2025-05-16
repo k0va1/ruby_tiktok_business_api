@@ -18,14 +18,14 @@ module TiktokBusinessApi
       #
       # @return [String] Resource name
       def resource_name
-        self.class.name.split('::').last.downcase
+        self.class.name.split("::").last.downcase
       end
 
       # Get the API version
       #
       # @return [String] API version
       def api_version
-        'v1.3'
+        "v1.3"
       end
 
       # Get the base path for this resource
@@ -66,7 +66,7 @@ module TiktokBusinessApi
       # @yield [item] Block to process each item
       # @yieldparam item [Hash] Item from the response
       # @return [Array] All items if no block is given
-      def paginate(path, params = {}, headers = {}, data_key = 'data')
+      def paginate(path, params = {}, headers = {}, data_key = "data", &block)
         items = []
         page = 1
         page_size = params[:page_size] || 10
@@ -79,17 +79,17 @@ module TiktokBusinessApi
           response = get(path, params, headers)
 
           # Extract data from the response
-          current_items = response.dig('data', data_key) || []
+          current_items = response.dig("data", data_key) || []
 
           if block_given?
-            current_items.each { |item| yield(item) }
+            current_items.each(&block)
           else
             items.concat(current_items)
           end
 
           # Check if there are more pages
-          page_info = response.dig('data', 'page_info') || {}
-          has_more = page_info['has_more'] == true
+          page_info = response.dig("data", "page_info") || {}
+          has_more = page_info["has_more"] == true
           page += 1
         end
 

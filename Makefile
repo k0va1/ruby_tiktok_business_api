@@ -16,12 +16,12 @@ build: install
 	docker-compose run --rm gem bundle exec rake build
 
 # Run tests
-test: install
+test:
 	docker-compose run --rm test
 
-# Run linting (RuboCop)
-lint: install
-	docker-compose run --rm gem bundle exec rubocop
+# Run linting (StandardRB)
+lint-fix:
+	docker-compose run --rm gem bundle exec standardrb --fix
 
 # Generate documentation
 docs: install
@@ -67,7 +67,8 @@ help:
 	@echo "  install  - Install dependencies"
 	@echo "  build    - Build the gem"
 	@echo "  test     - Run tests"
-	@echo "  lint     - Run RuboCop linting"
+	@echo "  lint     - Run linting"
+	@echo "  lint-fx  - Automatically fix linting issues"
 	@echo "  docs     - Generate documentation with YARD"
 	@echo "  shell    - Open a shell in the Docker container"
 	@echo "  console  - Open a Ruby console with the gem loaded"

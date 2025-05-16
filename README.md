@@ -40,7 +40,7 @@ If you want to use a custom logger:
 
 ```ruby
 require 'logger'
-logger = Logger.new(STDOUT)
+logger = Logger.new($stdout)
 logger.level = Logger::DEBUG
 
 TiktokBusinessApi.configure do |config|
@@ -170,7 +170,7 @@ You can enable debug logging to see all API requests and responses:
 ```ruby
 TiktokBusinessApi.configure do |config|
   config.debug = true
-  config.logger = Logger.new(STDOUT)
+  config.logger = Logger.new($stdout)
 end
 ```
 
@@ -218,8 +218,11 @@ make shell
 # Start a console with the gem loaded
 make console
 
-# Run RuboCop linting
+# Run Standard linting
 make lint
+
+# Automatically fix linting issues
+make lint-fix
 
 # Generate documentation
 make docs
@@ -267,7 +270,7 @@ bundle install
 bundle exec rake spec
 
 # Run linting
-bundle exec rubocop
+bundle exec standardrb
 
 # Generate documentation
 bundle exec yard

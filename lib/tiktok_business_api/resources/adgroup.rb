@@ -4,7 +4,7 @@ module TiktokBusinessApi
   module Resources
     # AdGroup resource for the TikTok Business API
     class Adgroup < CrudResource
-      RESOURCE_NAME = 'adgroup'
+      RESOURCE_NAME = "adgroup"
 
       def get(advertiser_id:, adgroup_id:)
         list(advertiser_id: advertiser_id, filtering: {adgroup_ids: [adgroup_id]}).first
@@ -20,7 +20,7 @@ module TiktokBusinessApi
         params = params.merge(advertiser_id: advertiser_id)
 
         response = _http_post(create_path, params)
-        response['data']
+        response["data"]
       end
 
       def list(advertiser_id:, campaign_id: nil, filtering: {}, page_size: nil, page: nil, **other_params, &block)
@@ -41,7 +41,7 @@ module TiktokBusinessApi
         )
 
         response = _http_post(update_path, params)
-        response['data']
+        response["data"]
       end
 
       # Update ad group status (enable/disable)
@@ -57,8 +57,8 @@ module TiktokBusinessApi
           operation_status: status
         }
 
-        response = _http_post('status/update/', params)
-        response['data']
+        response = _http_post("status/update/", params)
+        response["data"]
       end
 
       # Delete an ad group
@@ -73,7 +73,7 @@ module TiktokBusinessApi
         }
 
         response = _http_post(delete_path, params)
-        response['data']
+        response["data"]
       end
 
       # Estimate audience size for an ad group
@@ -84,8 +84,8 @@ module TiktokBusinessApi
       def estimate_audience_size(advertiser_id, params = {})
         params = params.merge(advertiser_id: advertiser_id)
 
-        response = _http_post('audience_size/estimate/', params)
-        response['data']
+        response = _http_post("audience_size/estimate/", params)
+        response["data"]
       end
     end
   end

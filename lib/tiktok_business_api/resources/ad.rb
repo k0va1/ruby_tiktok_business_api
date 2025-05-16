@@ -4,7 +4,7 @@ module TiktokBusinessApi
   module Resources
     # Ad resource for the TikTok Business API
     class Ad < CrudResource
-      RESOURCE_NAME = 'ad'
+      RESOURCE_NAME = "ad"
 
       def get(advertiser_id:, ad_id:)
         list(advertiser_id: advertiser_id, filtering: {ad_ids: [ad_id]}).first
@@ -24,10 +24,11 @@ module TiktokBusinessApi
         }
 
         response = _http_post(create_path, params)
-        response['data']
+        response["data"]
       end
 
-      def list(advertiser_id:, campaign_id: nil, adgroup_id: nil, filtering: {}, page_size: nil, page: nil, **other_params, &block)
+      def list(advertiser_id:, campaign_id: nil, adgroup_id: nil, filtering: {}, page_size: nil, page: nil,
+        **other_params, &block)
         filtering[:campaign_ids] = [campaign_id] if campaign_id
         filtering[:adgroup_ids] = [adgroup_id] if adgroup_id
         super(filtering: filtering, page_size: page_size, page: page, **other_params.merge(advertiser_id: advertiser_id), &block)
@@ -46,7 +47,7 @@ module TiktokBusinessApi
         )
 
         response = _http_post(update_path, params)
-        response['data']
+        response["data"]
       end
 
       # Update ad status (enable/disable)
@@ -62,8 +63,8 @@ module TiktokBusinessApi
           operation_status: status
         }
 
-        response = _http_post('status/update/', params)
-        response['data']
+        response = _http_post("status/update/", params)
+        response["data"]
       end
 
       # Delete an ad
@@ -78,7 +79,7 @@ module TiktokBusinessApi
         }
 
         response = _http_post(delete_path, params)
-        response['data']
+        response["data"]
       end
 
       # Create Smart Creative ads
@@ -94,8 +95,8 @@ module TiktokBusinessApi
           creatives: creatives
         }
 
-        response = _http_post('aco/create/', params)
-        response['data']
+        response = _http_post("aco/create/", params)
+        response["data"]
       end
     end
   end

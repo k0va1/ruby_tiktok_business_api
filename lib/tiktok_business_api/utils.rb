@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'digest/md5'
+
+require "digest/md5"
 
 module TiktokBusinessApi
   # Utility methods for TikTok Business API
@@ -31,27 +32,27 @@ module TiktokBusinessApi
     # @return [String] MIME type
     def self.detect_content_type(file)
       file_path = if file.is_a?(String)
-                    file
-                  elsif file.respond_to?(:path)
-                    file.path
-                  else
-                    return "application/octet-stream" # Default if we can't determine
-                  end
+        file
+      elsif file.respond_to?(:path)
+        file.path
+      else
+        return "application/octet-stream" # Default if we can't determine
+      end
 
       # Simple extension to MIME type mapping for common image formats
       case File.extname(file_path).downcase
-      when '.jpg', '.jpeg'
-        'image/jpeg'
-      when '.png'
-        'image/png'
-      when '.gif'
-        'image/gif'
-      when '.bmp'
-        'image/bmp'
-      when '.webp'
-        'image/webp'
+      when ".jpg", ".jpeg"
+        "image/jpeg"
+      when ".png"
+        "image/png"
+      when ".gif"
+        "image/gif"
+      when ".bmp"
+        "image/bmp"
+      when ".webp"
+        "image/webp"
       else
-        'application/octet-stream'
+        "application/octet-stream"
       end
     end
   end

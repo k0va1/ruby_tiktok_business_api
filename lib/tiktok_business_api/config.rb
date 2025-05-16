@@ -29,7 +29,7 @@ module TiktokBusinessApi
 
     # Initialize configuration with default values
     def initialize
-      @api_base_url = 'https://business-api.tiktok.com/open_api/'
+      @api_base_url = "https://business-api.tiktok.com/open_api/"
       @debug = false
       @timeout = 60
       @open_timeout = 30
