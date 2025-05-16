@@ -30,15 +30,15 @@ module TiktokBusinessApi
     # @return [BaseResource] Resource instance
     def resource(resource_name)
       @resources[resource_name] ||= begin
-                                      # Convert resource_name to class name (e.g., :campaign => Campaign)
-                                      class_name = resource_name.to_s.split('_').map(&:capitalize).join
+        # Convert resource_name to class name (e.g., :campaign => Campaign)
+        class_name = resource_name.to_s.split("_").map(&:capitalize).join
 
-                                      # Get the resource class
-                                      resource_class = TiktokBusinessApi::Resources.const_get(class_name)
+        # Get the resource class
+        resource_class = TiktokBusinessApi::Resources.const_get(class_name)
 
-                                      # Create an instance
-                                      resource_class.new(self)
-                                    end
+        # Create an instance
+        resource_class.new(self)
+      end
     end
 
     # Make an HTTP request to the TikTok Business API
@@ -53,13 +53,11 @@ module TiktokBusinessApi
 
       # Set up default headers
       default_headers = {
-        'Content-Type' => 'application/json'
+        "Content-Type" => "application/json"
       }
 
       # Add access token if available
-      if @config.access_token
-        default_headers['Access-Token'] = @config.access_token
-      end
+      default_headers["Access-Token"] = @config.access_token if @config.access_token
 
       # Merge with custom headers
       headers = default_headers.merge(headers)
@@ -73,10 +71,10 @@ module TiktokBusinessApi
         when :get, :delete
           req.params = params
         when :post, :put
-          if headers['Content-Type'] == 'multipart/form-data'
+          if headers["Content-Type"] == "multipart/form-data"
             # For multipart form data, let Faraday handle it
             req.options.timeout = 120 # Extend timeout for file uploads
-            req.body = {}  # Initialize the body as an empty hash
+            req.body = {} # Initialize the body as an empty hash
             params.each do |key, value|
               req.body[key.to_sym] = value
             end
@@ -172,19 +170,17 @@ module TiktokBusinessApi
 
       # Parse the response body
       body = if response.body && !response.body.empty?
-               begin
-                 JSON.parse(response.body)
-               rescue JSON::ParserError
-                 { error: "Invalid JSON response: #{response.body}" }
-               end
-             else
-               {}
-             end
+        begin
+          JSON.parse(response.body)
+        rescue JSON::ParserError
+          {error: "Invalid JSON response: #{response.body}"}
+        end
+      else
+        {}
+      end
 
       # Check for API errors
-      if !response.success? || (body.is_a?(Hash) && body['code'] != 0)
-        raise ErrorFactory.from_response(response)
-      end
+      raise ErrorFactory.from_response(response) if !response.success? || (body.is_a?(Hash) && body["code"] != 0)
 
       body
     end

@@ -3,7 +3,7 @@
 module TiktokBusinessApi
   module Resources
     class Account < CrudResource
-      RESOURCE_NAME = 'advertiser'
+      RESOURCE_NAME = "advertiser"
 
       def list(app_id:, secret:, &block)
         params = {
@@ -13,12 +13,12 @@ module TiktokBusinessApi
 
         response = client.request(:get, "/v1.3/oauth2/advertiser/get/", params)
         if block_given?
-          items = response.dig('data', 'list') || []
-          items.each { |item| yield(item) }
+          items = response.dig("data", "list") || []
+          items.each(&block)
 
           response
         else
-          response['data']['list']
+          response["data"]["list"]
         end
       end
 
@@ -29,7 +29,7 @@ module TiktokBusinessApi
         }
 
         response = client.request(:get, "#{base_path}info", params)
-        response.dig('data', 'list') || []
+        response.dig("data", "list") || []
       end
     end
   end

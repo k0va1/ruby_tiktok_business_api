@@ -8,12 +8,12 @@ module TiktokBusinessApi
       #
       # @return [String] Resource name
       def resource_name
-        'report/integrated'
+        "report/integrated"
       end
 
       def get_sync_report(**params)
         response = client.request(:get, "#{base_path}get", params)
-        response.dig('data', 'list') || []
+        response.dig("data", "list") || []
       end
     end
   end

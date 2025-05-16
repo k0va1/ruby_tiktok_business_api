@@ -1,30 +1,30 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe TiktokBusinessApi::Resources::Campaign do
-  let(:client) { TiktokBusinessApi::Client.new(app_id: 'test_app_id', secret: 'test_secret') }
+  let(:client) { TiktokBusinessApi::Client.new(app_id: "test_app_id", secret: "test_secret") }
   let(:campaign) { described_class.new(client) }
-  let(:advertiser_id) { '123456789' }
-  let(:campaign_id) { '987654321' }
+  let(:advertiser_id) { "123456789" }
+  let(:campaign_id) { "987654321" }
 
-  describe '#create' do
+  describe "#create" do
     let(:params) do
       {
-        campaign_name: 'Test Campaign',
-        objective_type: 'TRAFFIC',
-        budget_mode: 'BUDGET_MODE_TOTAL',
+        campaign_name: "Test Campaign",
+        objective_type: "TRAFFIC",
+        budget_mode: "BUDGET_MODE_TOTAL",
         budget: 1000
       }
     end
 
     let(:response) do
       {
-        'code' => 0,
-        'message' => 'OK',
-        'data' => {
-          'campaign_id' => campaign_id,
-          'campaign_name' => 'Test Campaign'
+        "code" => 0,
+        "message" => "OK",
+        "data" => {
+          "campaign_id" => campaign_id,
+          "campaign_name" => "Test Campaign"
         }
       }
     end
@@ -33,32 +33,32 @@ RSpec.describe TiktokBusinessApi::Resources::Campaign do
       stub_request(:post, "#{client.config.api_base_url}v1.3/campaign/create/")
         .with(
           body: hash_including(params.merge(advertiser_id: advertiser_id)),
-          headers: { 'Content-Type' => 'application/json' }
+          headers: {"Content-Type" => "application/json"}
         )
         .to_return(status: 200, body: response.to_json)
     end
 
-    it 'creates a campaign with the specified parameters' do
+    it "creates a campaign with the specified parameters" do
       result = campaign.create(advertiser_id, params)
-      expect(result).to eq(response['data'])
+      expect(result).to eq(response["data"])
     end
   end
 
-  describe '#list' do
+  describe "#list" do
     let(:response) do
       {
-        'code' => 0,
-        'message' => 'OK',
-        'data' => {
-          'list' => [
-            { 'campaign_id' => '111', 'campaign_name' => 'Campaign 1' },
-            { 'campaign_id' => '222', 'campaign_name' => 'Campaign 2' }
+        "code" => 0,
+        "message" => "OK",
+        "data" => {
+          "list" => [
+            {"campaign_id" => "111", "campaign_name" => "Campaign 1"},
+            {"campaign_id" => "222", "campaign_name" => "Campaign 2"}
           ],
-          'page_info' => {
-            'total_number' => 2,
-            'page' => 1,
-            'page_size' => 10,
-            'total_page' => 1
+          "page_info" => {
+            "total_number" => 2,
+            "page" => 1,
+            "page_size" => 10,
+            "total_page" => 1
           }
         }
       }
@@ -70,20 +70,20 @@ RSpec.describe TiktokBusinessApi::Resources::Campaign do
         .to_return(status: 200, body: response.to_json)
     end
 
-    it 'returns a list of campaigns' do
-      result = campaign.list(advertiser_id)
-      expect(result).to eq(response['data'])
+    it "returns a list of campaigns" do
+      result = campaign.list(advertiser_id: advertiser_id)
+      expect(result).to eq(response["data"]["list"])
     end
   end
 
-  describe '#get' do
+  describe "#get" do
     let(:response) do
       {
-        'code' => 0,
-        'message' => 'OK',
-        'data' => {
-          'list' => [
-            { 'campaign_id' => campaign_id, 'campaign_name' => 'Test Campaign' }
+        "code" => 0,
+        "message" => "OK",
+        "data" => {
+          "list" => [
+            {"campaign_id" => campaign_id, "campaign_name" => "Test Campaign"}
           ]
         }
       }
@@ -91,30 +91,30 @@ RSpec.describe TiktokBusinessApi::Resources::Campaign do
 
     before do
       stub_request(:get, "#{client.config.api_base_url}v1.3/campaign/get/")
-        .with(query: hash_including(advertiser_id: advertiser_id, campaign_ids: [campaign_id]))
+        .with(query: hash_including(advertiser_id: advertiser_id, filtering: {campaign_ids: [campaign_id]}.to_json))
         .to_return(status: 200, body: response.to_json)
     end
 
-    it 'returns a specific campaign' do
-      result = campaign.get(advertiser_id, campaign_id)
-      expect(result).to eq(response['data']['list'].first)
+    it "returns a specific campaign" do
+      result = campaign.get(advertiser_id: advertiser_id, campaign_id: campaign_id)
+      expect(result).to eq(response["data"]["list"].first)
     end
   end
 
-  describe '#update' do
+  describe "#update" do
     let(:update_params) do
       {
-        campaign_name: 'Updated Campaign'
+        campaign_name: "Updated Campaign"
       }
     end
 
     let(:response) do
       {
-        'code' => 0,
-        'message' => 'OK',
-        'data' => {
-          'campaign_id' => campaign_id,
-          'campaign_name' => 'Updated Campaign'
+        "code" => 0,
+        "message" => "OK",
+        "data" => {
+          "campaign_id" => campaign_id,
+          "campaign_name" => "Updated Campaign"
         }
       }
     end
@@ -125,26 +125,26 @@ RSpec.describe TiktokBusinessApi::Resources::Campaign do
           body: hash_including(
             advertiser_id: advertiser_id,
             campaign_id: campaign_id,
-            campaign_name: 'Updated Campaign'
+            campaign_name: "Updated Campaign"
           ),
-          headers: { 'Content-Type' => 'application/json' }
+          headers: {"Content-Type" => "application/json"}
         )
         .to_return(status: 200, body: response.to_json)
     end
 
-    it 'updates a campaign with the specified parameters' do
+    it "updates a campaign with the specified parameters" do
       result = campaign.update(advertiser_id, campaign_id, update_params)
-      expect(result).to eq(response['data'])
+      expect(result).to eq(response["data"])
     end
   end
 
-  describe '#update_status' do
+  describe "#update_status" do
     let(:response) do
       {
-        'code' => 0,
-        'message' => 'OK',
-        'data' => {
-          'campaign_ids' => [campaign_id]
+        "code" => 0,
+        "message" => "OK",
+        "data" => {
+          "campaign_ids" => [campaign_id]
         }
       }
     end
@@ -155,26 +155,26 @@ RSpec.describe TiktokBusinessApi::Resources::Campaign do
           body: hash_including(
             advertiser_id: advertiser_id,
             campaign_ids: [campaign_id],
-            operation_status: 'DISABLE'
+            operation_status: "DISABLE"
           ),
-          headers: { 'Content-Type' => 'application/json' }
+          headers: {"Content-Type" => "application/json"}
         )
         .to_return(status: 200, body: response.to_json)
     end
 
-    it 'updates the campaign status' do
-      result = campaign.update_status(advertiser_id, campaign_id, 'DISABLE')
-      expect(result).to eq(response['data'])
+    it "updates the campaign status" do
+      result = campaign.update_status(advertiser_id, campaign_id, "DISABLE")
+      expect(result).to eq(response["data"])
     end
   end
 
-  describe '#delete' do
+  describe "#delete" do
     let(:response) do
       {
-        'code' => 0,
-        'message' => 'OK',
-        'data' => {
-          'campaign_ids' => [campaign_id]
+        "code" => 0,
+        "message" => "OK",
+        "data" => {
+          "campaign_ids" => [campaign_id]
         }
       }
     end
@@ -186,14 +186,14 @@ RSpec.describe TiktokBusinessApi::Resources::Campaign do
             advertiser_id: advertiser_id,
             campaign_ids: [campaign_id]
           ),
-          headers: { 'Content-Type' => 'application/json' }
+          headers: {"Content-Type" => "application/json"}
         )
         .to_return(status: 200, body: response.to_json)
     end
 
-    it 'deletes a campaign' do
+    it "deletes a campaign" do
       result = campaign.delete(advertiser_id, campaign_id)
-      expect(result).to eq(response['data'])
+      expect(result).to eq(response["data"])
     end
   end
 end

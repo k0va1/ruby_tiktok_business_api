@@ -1,28 +1,28 @@
 # frozen_string_literal: true
 
-require 'faraday'
-require 'faraday/retry'
-require 'faraday/follow_redirects'
-require 'faraday/multipart'
-require 'json'
+require "faraday"
+require "faraday/retry"
+require "faraday/follow_redirects"
+require "faraday/multipart"
+require "json"
 
-require_relative 'tiktok_business_api/version'
-require_relative 'tiktok_business_api/config'
-require_relative 'tiktok_business_api/errors'
-require_relative 'tiktok_business_api/utils'
-require_relative 'tiktok_business_api/client'
-require_relative 'tiktok_business_api/auth'
+require_relative "tiktok_business_api/version"
+require_relative "tiktok_business_api/config"
+require_relative "tiktok_business_api/errors"
+require_relative "tiktok_business_api/utils"
+require_relative "tiktok_business_api/client"
+require_relative "tiktok_business_api/auth"
 
 # Resources
-require_relative 'tiktok_business_api/resources/base_resource'
-require_relative 'tiktok_business_api/resources/crud_resource'
-require_relative 'tiktok_business_api/resources/campaign'
-require_relative 'tiktok_business_api/resources/adgroup'
-require_relative 'tiktok_business_api/resources/ad'
-require_relative 'tiktok_business_api/resources/image'
-require_relative 'tiktok_business_api/resources/identity'
-require_relative 'tiktok_business_api/resources/account'
-require_relative 'tiktok_business_api/resources/reporting'
+require_relative "tiktok_business_api/resources/base_resource"
+require_relative "tiktok_business_api/resources/crud_resource"
+require_relative "tiktok_business_api/resources/campaign"
+require_relative "tiktok_business_api/resources/adgroup"
+require_relative "tiktok_business_api/resources/ad"
+require_relative "tiktok_business_api/resources/image"
+require_relative "tiktok_business_api/resources/identity"
+require_relative "tiktok_business_api/resources/account"
+require_relative "tiktok_business_api/resources/reporting"
 
 module TiktokBusinessApi
   class << self
