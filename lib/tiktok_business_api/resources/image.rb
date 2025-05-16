@@ -74,15 +74,14 @@ module TiktokBusinessApi
       # @param advertiser_id [String] Advertiser ID
       # @param image_id [String] Image ID
       # @return [Hash] Image info
-      def get_info(advertiser_id, image_id)
+      def get_info(advertiser_id, image_ids)
         params = {
           advertiser_id: advertiser_id,
-          image_ids: [image_id]
+          image_ids: image_ids.to_json
         }
 
         response = client.request(:get, "#{base_path}/info/", params)
-        images = response.dig("data", "list") || []
-        images.first
+        response.dig("data", "list") || []
       end
 
       # Search for images
