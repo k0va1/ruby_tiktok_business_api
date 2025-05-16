@@ -132,6 +132,13 @@ module TiktokBusinessApi
       resource(:account)
     end
 
+    # Access to reporting resource
+    #
+    # @return [TiktokBusinessApi::Resources::Reporting] Reporting resource
+    def reportings
+      resource(:reporting)
+    end
+
     private
 
     # Set up Faraday connection
