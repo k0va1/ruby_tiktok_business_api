@@ -116,6 +116,13 @@ module TiktokBusinessApi
       resource(:image)
     end
 
+    # Access to video resource
+    #
+    # @return [TiktokBusinessApi::Resources::Video] Video resource
+    def videos
+      resource(:video)
+    end
+
     # Access to identity resource
     #
     # @return [TiktokBusinessApi::Resources::Identity] Identity resource
