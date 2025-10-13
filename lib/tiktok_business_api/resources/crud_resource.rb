@@ -83,13 +83,14 @@ module TiktokBusinessApi
       # List all resources with automatic pagination
       #
       # @param owner_id [String] ID of the resource owner (e.g., advertiser_id)
-      # @param params [Hash] Filter parameters
+      # @param filtering [Hash] Filtering parameters
+      # @param params [Hash] Additional parameters
       # @param owner_param_name [String] Parameter name for the owner ID
       # @param list_key [String] Key in the response that contains the data array
       # @yield [resource] Block to process each resource
       # @yieldparam resource [Hash] Resource from the response
       # @return [Array] All resources if no block is given
-      def list_all(owner_id, params = {}, owner_param_name = "advertiser_id", list_key = "list", &block)
+      def list_all(owner_id, filtering: {}, params = {}, owner_param_name = "advertiser_id", list_key = "list", &block)
         items = []
         page = 1
         page_size = params[:page_size] || 10
@@ -97,6 +98,7 @@ module TiktokBusinessApi
 
         # Ensure owner_id is included in the params
         request_params = params.merge(owner_param_name => owner_id)
+        request_params[:filtering] = filtering.to_json unless filtering.empty?
 
         while has_more
           request_params[:page] = page
