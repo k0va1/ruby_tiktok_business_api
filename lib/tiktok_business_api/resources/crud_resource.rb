@@ -90,7 +90,7 @@ module TiktokBusinessApi
       # @yield [resource] Block to process each resource
       # @yieldparam resource [Hash] Resource from the response
       # @return [Array] All resources if no block is given
-      def list_all(owner_id, filtering: {}, params = {}, owner_param_name = "advertiser_id", list_key = "list", &block)
+      def list_all(owner_id, params = {}, owner_param_name = "advertiser_id", list_key = "list", filtering: {}, &block)
         items = []
         page = 1
         page_size = params[:page_size] || 10
