@@ -144,6 +144,11 @@ module TiktokBusinessApi
       resource(:reporting)
     end
 
+    # Access to SPC resource
+    def spcs
+      resource(:spc)
+    end
+
     private
 
     # Set up Faraday connection

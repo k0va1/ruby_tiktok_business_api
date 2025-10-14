@@ -24,6 +24,7 @@ require_relative "tiktok_business_api/resources/video"
 require_relative "tiktok_business_api/resources/identity"
 require_relative "tiktok_business_api/resources/account"
 require_relative "tiktok_business_api/resources/reporting"
+require_relative "tiktok_business_api/resources/spc"
 
 module TiktokBusinessApi
   class << self
