@@ -32,7 +32,7 @@ module TiktokBusinessApi
       #
       # @return [String] Base path
       def base_path
-        "#{api_version}/#{resource_name}/"
+        "#{api_version}/#{resource_name}"
       end
 
       # Make a GET request to the resource

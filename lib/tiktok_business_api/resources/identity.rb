@@ -28,7 +28,7 @@ module TiktokBusinessApi
         params[:page] = options[:page] if options[:page]
         params[:page_size] = options[:page_size] if options[:page_size]
 
-        response = client.request(:get, "#{base_path}get/", params)
+        response = client.request(:get, "#{base_path}/get/", params)
 
         if block_given? && response["data"]["identity_list"]
           response["data"]["identity_list"].each(&block)
@@ -54,7 +54,7 @@ module TiktokBusinessApi
         # Add Business Center ID if provided (required for BC_AUTH_TT)
         params[:identity_authorized_bc_id] = identity_authorized_bc_id if identity_authorized_bc_id
 
-        response = client.request(:get, "#{base_path}info/", params)
+        response = client.request(:get, "#{base_path}/info/", params)
         response["data"]["identity_info"]
       end
 
@@ -73,7 +73,7 @@ module TiktokBusinessApi
         # Add image URI if provided
         params[:image_uri] = image_uri if image_uri
 
-        response = client.request(:post, "#{base_path}create/", params)
+        response = client.request(:post, "#{base_path}/create/", params)
         response["data"]
       end
 

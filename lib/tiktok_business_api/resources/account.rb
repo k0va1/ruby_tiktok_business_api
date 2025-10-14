@@ -28,7 +28,7 @@ module TiktokBusinessApi
           fields: fields
         }
 
-        response = client.request(:get, "#{base_path}info", params)
+        response = client.request(:get, "#{base_path}/info", params)
         response.dig("data", "list") || []
       end
     end
