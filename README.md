@@ -223,12 +223,27 @@ rescue TiktokBusinessApi::AuthenticationError => e
   puts "Authentication failed: #{e.message}"
 rescue TiktokBusinessApi::RateLimitError => e
   puts "Rate limit exceeded: #{e.message}"
+rescue TiktokBusinessApi::AuthorizationError => e
+  puts "Missing permission: #{e.message}"
 rescue TiktokBusinessApi::ApiError => e
   puts "API error: #{e.message}, Status code: #{e.status_code}, Body: #{e.body}"
 rescue TiktokBusinessApi::Error => e
-  puts "General error: #{e.message}"
+  puts "General error: #{e.message}, TikTok code: #{e.code}, Request id: #{e.request_id}"
 end
 ```
+
+TikTok answers most failures with HTTP 200 and a non-zero `code` in the body, so the error class is picked from that code first and from the HTTP status second:
+
+| TikTok code | HTTP status | Error class |
+|---|---|---|
+| 40001 (no permission) | 403 | `AuthorizationError` |
+| 40100 (too many requests) | 429 | `RateLimitError` |
+| 40105 (access token rejected) | 401 | `AuthenticationError` |
+| 50000-59999 (TikTok-side failure) | 500-599 | `ApiError` |
+| | other 400-499 | `InvalidRequestError` |
+| anything else | | `Error` |
+
+Every error exposes `code` (the TikTok return code), `request_id`, `status_code` and `body`.
 
 ## Development
 

@@ -24,6 +24,21 @@ module TiktokBusinessApi
       @request = request
       super(message)
     end
+
+    # TikTok return code from the response body (e.g. 40001, 40100, 50000).
+    # TikTok answers most failures with HTTP 200 and a non-zero code.
+    #
+    # @return [Integer, nil] TikTok return code
+    def code
+      Integer(body["code"], exception: false) if body.is_a?(Hash)
+    end
+
+    # TikTok request id, the reference TikTok support asks for
+    #
+    # @return [String, nil] TikTok request id
+    def request_id
+      body["request_id"] if body.is_a?(Hash)
+    end
   end
 
   # Error raised when authentication fails
@@ -43,6 +58,16 @@ module TiktokBusinessApi
 
   # Factory for creating the appropriate error object
   class ErrorFactory
+    # TikTok return codes that identify the failure whatever the HTTP status is
+    CODE_CLASSES = {
+      40_001 => AuthorizationError,
+      40_100 => RateLimitError,
+      40_105 => AuthenticationError
+    }.freeze
+
+    # TikTok return codes of server-side failures (internal error, internal timeout)
+    SERVER_ERROR_CODES = (50_000..59_999)
+
     # Create an error object based on the response
     #
     # @param response [Faraday::Response] The HTTP response
@@ -61,11 +86,37 @@ module TiktokBusinessApi
       end
 
       # Parse TikTok API response which has its own error structure
-      body.is_a?(Hash) ? body["code"] : nil
+      code = body.is_a?(Hash) ? Integer(body["code"], exception: false) : nil
       error_message = body.is_a?(Hash) ? body["message"] : nil
 
-      # Determine the error class based on status and error code
-      klass = case status
+      # The TikTok return code wins: most failures come back as HTTP 200
+      klass = class_for_code(code) || class_for_status(status)
+
+      # Create and return the error
+      klass.new(
+        error_message || "HTTP #{status}",
+        status,
+        body,
+        request
+      )
+    end
+
+    # Error class of a TikTok return code, nil when the code alone does not tell
+    #
+    # @param code [Integer, nil] TikTok return code
+    # @return [Class, nil] Error class
+    def self.class_for_code(code)
+      return if code.nil?
+
+      CODE_CLASSES[code] || (ApiError if SERVER_ERROR_CODES.cover?(code))
+    end
+
+    # Error class of an HTTP status
+    #
+    # @param status [Integer] HTTP status code
+    # @return [Class] Error class
+    def self.class_for_status(status)
+      case status
       when 401
         AuthenticationError
       when 403
@@ -79,14 +130,6 @@ module TiktokBusinessApi
       else
         Error
       end
-
-      # Create and return the error
-      klass.new(
-        error_message || "HTTP #{status}",
-        status,
-        body,
-        request
-      )
     end
   end
 end
